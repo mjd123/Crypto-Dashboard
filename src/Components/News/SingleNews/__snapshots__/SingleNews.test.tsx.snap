@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component renders SingleNews renders without crashing 1`] = `
+<Fragment>
+  <a
+    rel="noreferrer"
+    target="_blank"
+  >
+    <Card
+      bodyStyle={
+        Object {
+          "alignItems": "center",
+          "borderRadius": "10px",
+          "boxShadow": "inset 0 0 0 100vmax rgba(0, 0, 0, 0.6)",
+          "display": "flex",
+          "flexDirection": "column",
+          "height": "100%",
+          "justifyContent": "space-around",
+          "position": "initial",
+          "textAlign": "center",
+        }
+      }
+      bordered={false}
+      hoverable={true}
+      size="small"
+      style={
+        Object {
+          "borderRadius": "10px",
+          "display": "flex",
+          "flexDirection": "column",
+          "width": "100%",
+        }
+      }
+    >
+      <Styled(PageText)
+        color="white"
+      />
+    </Card>
+  </a>
+</Fragment>
+`;
+
+exports[`test props SingleNews renders without props 1`] = `
+<SingleNews
+  news={
+    Array [
+      Object {},
+    ]
+  }
+>
+  <a
+    rel="noreferrer"
+    target="_blank"
+  >
+    <Card
+      bodyStyle={
+        Object {
+          "alignItems": "center",
+          "borderRadius": "10px",
+          "boxShadow": "inset 0 0 0 100vmax rgba(0, 0, 0, 0.6)",
+          "display": "flex",
+          "flexDirection": "column",
+          "height": "100%",
+          "justifyContent": "space-around",
+          "position": "initial",
+          "textAlign": "center",
+        }
+      }
+      bordered={false}
+      hoverable={true}
+      size="small"
+      style={
+        Object {
+          "borderRadius": "10px",
+          "display": "flex",
+          "flexDirection": "column",
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-card ant-card-hoverable ant-card-small"
+        style={
+          Object {
+            "borderRadius": "10px",
+            "display": "flex",
+            "flexDirection": "column",
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="ant-card-body"
+          style={
+            Object {
+              "alignItems": "center",
+              "borderRadius": "10px",
+              "boxShadow": "inset 0 0 0 100vmax rgba(0, 0, 0, 0.6)",
+              "display": "flex",
+              "flexDirection": "column",
+              "height": "100%",
+              "justifyContent": "space-around",
+              "position": "initial",
+              "textAlign": "center",
+            }
+          }
+        >
+          <Styled(PageText)
+            color="white"
+          >
+            <PageText
+              className="sc-bdfBQB jaKmxc"
+              color="white"
+            >
+              <span
+                className="sc-bdfBQB jaKmxc"
+              />
+            </PageText>
+          </Styled(PageText)>
+        </div>
+      </div>
+    </Card>
+  </a>
+</SingleNews>
+`;

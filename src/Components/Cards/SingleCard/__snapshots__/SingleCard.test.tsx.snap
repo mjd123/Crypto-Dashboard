@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card wont fail without component Cards component renders complex without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`Card wont fail without component Cards component renders simple without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`Card wont fail without component Cards component renders without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`SingleCard accepts props Cards component renders complex without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`SingleCard accepts props Cards component renders simple without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`passing props Cards component renders complex without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`passing props Cards component renders simple without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`passing props SingleCard component renders complex without crashing 1`] = `ShallowWrapper {}`;
+
+exports[`passing props SingleCard component renders simple without crashing 1`] = `ShallowWrapper {}`;
