@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef, memo } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import SingleCard from "./SingleCard/SingleCard";
 import { Wrapper } from "./styles";
 import { Row } from "antd";
@@ -10,8 +10,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import Loading from "../../helpers/Loading";
 
 interface CardsProps {
-  data: Record<string, string | number>[] | undefined;
-  history: Record<string, {}> | undefined;
+  data?: Record<string, string | number>[] | undefined;
+  history?: Record<string, {}> | undefined;
 }
 
 const Cards = ({ data, history }: CardsProps) => {
@@ -60,7 +60,6 @@ const Cards = ({ data, history }: CardsProps) => {
                 <AnimatePresence onExitComplete={() => setFadeComponent(true)}>
                   {cardStatus === null && !fadeComponent && (
                     <motion.div
-                      key={i}
                       onTap={(e) => expandRow(e, i)}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -71,7 +70,6 @@ const Cards = ({ data, history }: CardsProps) => {
                       }}
                     >
                       <Row
-                        key={i}
                         gutter={0}
                         style={
                           i === 0
@@ -99,7 +97,6 @@ const Cards = ({ data, history }: CardsProps) => {
                 <AnimatePresence onExitComplete={() => setFadeComponent(false)}>
                   {rowClicked === i && cardStatus === i && fadeComponent && (
                     <motion.div
-                      key={i}
                       onTap={(e) => expandRow(e, i)}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -111,14 +108,13 @@ const Cards = ({ data, history }: CardsProps) => {
                       }}
                     >
                       <Row
-                        key={i}
                         gutter={0}
                         style={{ height: "100%" }}
                         className="single-card-wrapper"
                       >
                         <SingleCard
-                          expanded={rowClicked === i ? true : false}
                           key={i}
+                          expanded={rowClicked === i ? true : false}
                           keyId={i}
                           history={history[coin.id]}
                           coinImage={coin.image}

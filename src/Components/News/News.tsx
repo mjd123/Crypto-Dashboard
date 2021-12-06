@@ -14,13 +14,11 @@ const News = ({ data }: NewsProps) => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
-
-      //toggleLoading(true);
-      setLoading(true);
-    } else {
-      // toggleLoading(false);
       setLoading(false);
+      console.log("true");
+    } else {
+      setLoading(true);
+      console.log("false");
     }
   }, [data]);
 

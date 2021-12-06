@@ -1,16 +1,13 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import Author from "./Author";
-import { Wrapper, Text } from "./styles";
-import toJson from "enzyme-to-json";
 
-test("Author renders time with given string", () => {
-  const mockProps = {
-    name: "string",
-  };
-  const component = mount(<Author name={mockProps.name} />);
-  const text = component.find("span").text();
+test("Author renders", () => {
+  const wrapper = mount(<Author />);
+  expect(wrapper.html()).not.toBe(null);
+});
 
-  expect(typeof text).toBe("string");
-  expect(text).toEqual("Photo by: string");
+test("Author renders props", () => {
+  const wrapper = mount(<Author name={"name"} />);
+  expect(wrapper.html()).not.toBe(null);
+  expect(wrapper.find("span").text()).toContain("name");
 });

@@ -1,3 +1,4 @@
+import { getByTestId, render, screen, within } from "@testing-library/react";
 import { mount, shallow } from "enzyme";
 import SingleCard from "./SingleCard";
 
@@ -20,39 +21,66 @@ const mockData = {
   symbol: "sol",
 };
 
-describe("passing props", () => {
-  test("SingleCard component renders complex without crashing", () => {
-    const component = shallow(
-      <SingleCard
-        expanded={true}
-        history={mockData.history}
-        coinImage={mockData.coinImage}
-        price={mockData.price}
-        priceChange={mockData.priceChange}
-        text={mockData.text}
-        symbol={mockData.symbol}
-        totalVolume={mockData.totalVolume}
-        dayRange={{
-          low: 0,
-          high: 0,
-        }}
-      />
-    );
-    expect(component).toMatchSnapshot();
-  });
+test("simple SingleCard component data", () => {
+  const wrapper = mount(
+    <SingleCard
+      expanded={false}
+      // history={mockData.history}
+      coinImage={mockData.coinImage}
+      price={mockData.price}
+      priceChange={mockData.priceChange}
+      text={mockData.text}
+      symbol={mockData.symbol}
+      totalVolume={mockData.totalVolume}
+      dayRange={{
+        low: 0,
+        high: 0,
+      }}
+      keyId={0}
+    />
+  );
 
-  test("SingleCard component renders simple without crashing", () => {
-    const component = shallow(
-      <SingleCard
-        history={mockData.history}
-        coinImage={mockData.coinImage}
-        price={mockData.price}
-        priceChange={mockData.priceChange}
-        totalVolume={mockData.totalVolume}
-        text={mockData.text}
-        symbol={mockData.symbol}
-      />
-    );
-    expect(component).toMatchSnapshot();
-  });
+  //console.log(wrapper.debug());
+  expect(wrapper.find("span").at(0).text()).toContain(mockData.text);
+  expect(wrapper.find("span").at(1).text()).toContain(
+    mockData.symbol.toLocaleUpperCase()
+  );
+  expect(wrapper.find("span").at(2).text()).toContain(mockData.price);
+  expect(wrapper.find("span").at(3).text()).toContain(
+    mockData.priceChange.toFixed(2)
+  );
+});
+
+test("complex SingleCard component data", () => {
+  render(
+    <SingleCard
+      expanded={true}
+      // history={mockData.history}
+      coinImage={mockData.coinImage}
+      price={mockData.price}
+      priceChange={mockData.priceChange}
+      text={mockData.text}
+      symbol={mockData.symbol}
+      totalVolume={mockData.totalVolume}
+      dayRange={{
+        low: 0,
+        high: 0,
+      }}
+      keyId={0}
+    />
+  );
+
+  //screen.debug();
+  expect(screen.getByTestId("card")).toHaveClass("expanded");
+  expect(
+    screen.getByText(mockData.symbol.toLocaleUpperCase())
+  ).toBeInTheDocument();
+  expect(screen.getByTestId("card")).toHaveTextContent(`$${mockData.price}`);
+  expect(
+    screen.getByText(`+${mockData.priceChange.toFixed(2)}%`)
+  ).toBeInTheDocument();
+  expect(screen.getByAltText("coin")).toHaveAttribute(
+    "src",
+    mockData.coinImage
+  );
 });

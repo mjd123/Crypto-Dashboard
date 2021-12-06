@@ -15,8 +15,6 @@ const useFetchData = (params: string | boolean | undefined) => {
       });
       if (response.data.backgroundData.fetched) {
         setBackgroundData(response.data.backgroundData);
-
-        console.log(backgroundData);
       }
     };
     fetchBackgroundData();
@@ -24,7 +22,6 @@ const useFetchData = (params: string | boolean | undefined) => {
 
   useEffect(() => {
     const fetchNewsData = async () => {
-      console.log("news called");
       const response = await axios.get(`/api`, {
         params: {
           type: "news",

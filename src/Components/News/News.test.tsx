@@ -1,14 +1,7 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import News from "./News";
-import { Wrapper, Text } from "./styles";
-import NewsProps from "./News";
-import SingleNews from "./SingleNews/SingleNews";
-
-// it("News renders without crashing", () => {
-//   const mockData = {};
-//   shallow(<News data={mockData} />);
-// });
+import { getByText, render, screen, waitFor } from "@testing-library/react";
 
 const mockData: any = {
   data: {
@@ -56,26 +49,14 @@ const mockData: any = {
   },
 };
 
-test("News renders without crashing", () => {
-  const mockData = {};
-  expect(shallow(<News data={mockData} />)).toMatchSnapshot();
+test(" News component accepts props", async () => {
+  const { container } = render(<News data={mockData.data} />);
+  await waitFor(() => {
+    expect(container.getElementsByClassName("ant-spin-dot").length).toBe(1);
+  });
 });
 
-test(" News component accepts props", () => {
-  const wrapper = mount(<News data={mockData} />);
-
-  expect(wrapper.props().topHeadlines).toEqual(mockData.topHeadlines);
-});
-
-test(" News component renders without props", () => {
-  const emptyMockData: any = {
-    data: {
-      topHeadlines: [{}],
-      shortHeadlines: {},
-      cryptoHeadlines: {},
-    },
-  };
-  const wrapper = mount(<News data={emptyMockData} />);
-
-  expect(wrapper.props().data.data.topHeadlines).toEqual([{}]);
+test(" News component renders without props", async () => {
+  const { container } = render(<News />);
+  expect(container.getElementsByClassName("ant-spin-dot").length).toBe(0);
 });

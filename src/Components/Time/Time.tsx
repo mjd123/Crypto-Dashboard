@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Text, Wrapper } from "./styles";
 import moment from "moment";
 import useInterval from "../../hooks/useInterval";
@@ -9,7 +9,7 @@ const Time = () => {
 
   const updateTime = useCallback(() => {
     setTime(moment().format("HH:mm:ss"));
-  }, [time]);
+  }, []);
 
   useInterval(updateTime, 500);
 

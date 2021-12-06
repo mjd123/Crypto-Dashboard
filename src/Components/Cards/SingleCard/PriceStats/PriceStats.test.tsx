@@ -1,12 +1,15 @@
 import { mount } from "enzyme";
 import PriceStats from "./PriceStats";
 
-const mockData = { prev: 0, open: 1, volume: 2, range: { low: 0, high: 10 } };
+const mockData = {
+  yesterdayPriceHistory: [],
+  volume: 2,
+  range: { low: 0, high: 10 },
+};
 
 const component = mount(
   <PriceStats
-    prev={mockData.prev}
-    open={mockData.open}
+    yesterdayPriceHistory={[]}
     volume={mockData.volume}
     range={{ low: mockData.range.low, high: mockData.range.high }}
   />

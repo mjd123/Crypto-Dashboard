@@ -4,7 +4,6 @@ import { Card } from "antd";
 import Chart from "./Chart/Chart";
 import { memo, useEffect, useState } from "react";
 import CloseButton from "./CloseButton/CloseButton";
-import moment from "moment";
 import DateButtons from "./DateButtons/DateButtons";
 import PriceStats from "./PriceStats/PriceStats";
 
@@ -14,7 +13,7 @@ export interface IndividualCardProps {
   symbol: string;
   price: string | number;
   priceChange: number;
-  history: any;
+  history?: any;
   expanded?: boolean | undefined;
   totalVolume?: number;
   dayRange?: { low: number; high: number };
@@ -117,6 +116,7 @@ const IndividualCard = memo(
     return (
       <>
         <Card
+          data-testid="card"
           className={expandCard ? "expanded" : ""}
           style={
             expandCard
@@ -154,13 +154,14 @@ const IndividualCard = memo(
             marginBottom={expandCard ? "1.5em" : "0"}
             height={"auto"}
           >
-            {console.log(timeframe, "pd")}
-            <Chart
-              expanded={expandCard}
-              history={priceData}
-              priceChange={priceChange}
-              timeframe={timeframe}
-            />
+            {history && (
+              <Chart
+                expanded={expandCard}
+                history={priceData}
+                priceChange={priceChange}
+                timeframe={timeframe}
+              />
+            )}
           </CardTextWrapper>
 
           <CardTextWrapper
@@ -186,8 +187,6 @@ const IndividualCard = memo(
                 marginBottom="1.5em"
               >
                 {timeframeKeys.map((item: string, i: number) => {
-                  console.log(item, "item", timeframe);
-
                   return (
                     <DateButtons
                       key={i}

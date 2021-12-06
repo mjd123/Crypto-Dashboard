@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import GlobalCSS from "./styles/Global";
 import "./App.css";
 import Time from "./Components/Time/Time";
@@ -29,8 +29,7 @@ const App = () => {
   const cardControls = useAnimation();
   const scrollHeight = window.innerHeight;
   const { scrollY } = useViewportScroll();
-  const [fadeComponent, setFadeComponent] = useState<boolean>(false);
-  const [fetchTrigger, setFetchTrigger] = useState<boolean>(false);
+  const [fadeComponent, setFadeComponent] = useState(false);
 
   const getCoins = useCallback(async () => {
     let isMounted = true;
@@ -38,7 +37,6 @@ const App = () => {
 
     if (isMounted) {
       if (response.data.fetched === true) {
-        console.log("is mounted and theres data");
         // update only if data is new
         if (
           JSON.stringify(coinDataStore) !==
@@ -51,22 +49,12 @@ const App = () => {
     }
   }, [coinDataStore]);
 
-  const trigger = () => {
-    console.log("in trigger");
-
-    setFetchTrigger(!fetchTrigger);
-  };
-
-  // useInterval(trigger, 6000);
   useInterval(getCoins, 6000);
 
   useEffect(() => {
     // check there is data
-    console.log("check", backgroundData?.image);
-
     if (backgroundData && Object.keys(backgroundData).length) {
       setImg(backgroundData.image);
-      console.log(img);
     }
     // pass to news component and let it break data down
     if (newsData && Object.keys(newsData).length) {

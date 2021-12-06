@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import { device } from "./Breakpoints";
 
 export default createGlobalStyle`
    *{

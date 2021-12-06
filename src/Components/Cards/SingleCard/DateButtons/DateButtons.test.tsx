@@ -6,18 +6,17 @@ const component = mount(
   <DateButtons
     timeframe={mockData.timeframe}
     timeframeData={mockData.timeframeData}
+    initial={true}
+    disabled={false}
   />
 );
-describe("passing props", () => {
-  test("DateButtons accepts props", () => {
-    expect(typeof component.props().timeframe).toBe("string");
-  });
+
+test("DateButtons accepts props", () => {
+  expect(typeof component.props().timeframe).toBe("string");
 });
 
-describe("click", () => {
-  test("DateButtons accepts click", () => {
-    component.simulate("click");
+test("DateButtons accepts click", () => {
+  component.simulate("click");
 
-    expect(mockData.timeframeData).toHaveBeenCalled();
-  });
+  expect(mockData.timeframeData).toHaveBeenCalled();
 });

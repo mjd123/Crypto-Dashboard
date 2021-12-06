@@ -7,7 +7,6 @@
     "@ant-design/charts": "^1.2.13",
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/user-event": "^12.8.3",
     "@types/jest": "^26.0.24",
     "@types/node": "^12.20.19",
     "@types/react": "^17.0.18",
@@ -54,10 +53,13 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/dom": "^8.11.1",
     "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
     "@types/enzyme": "^3.10.10",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/styled-components": "^5.1.12",
+    "canvas": "^2.8.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.4",

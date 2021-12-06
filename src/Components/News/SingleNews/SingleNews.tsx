@@ -2,7 +2,6 @@ import { Card } from "antd";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useState } from "react";
-import useFetchData from "../../../hooks/useFetchData";
 import { Text } from "../styles";
 
 interface SingleNewsProps {
@@ -28,7 +27,7 @@ const SingleNews = ({ news, id }: SingleNewsProps) => {
   const [fadeComponent, setFadeComponent] = useState(false);
 
   const [fetchTrigger, setFetchTrigger] = useState<boolean>();
-  const { newsData } = useFetchData(fetchTrigger);
+
   let newsItems: any = news;
 
   useEffect(() => {

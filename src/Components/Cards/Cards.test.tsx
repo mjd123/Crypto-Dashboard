@@ -1,10 +1,8 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import Cards from "./Cards";
-import useFetch from "../../hooks/useFetchData";
-
-import toJson from "enzyme-to-json";
-import SingleCard from "./SingleCard/SingleCard";
+import { render, screen } from "@testing-library/react";
+import Loading from "../../helpers/Loading";
 
 const mockData = [
   {
@@ -33,21 +31,14 @@ const mockData = [
     atl: 67.81,
     atl_change_percentage: 90073.1045,
     atl_date: "2013-07-06T00:00:00.000Z",
-    roi: null,
+    roi: 0,
     last_updated: "2021-10-28T12:11:07.552Z",
   },
 ];
 
-jest.mock("../../hooks/useFetchData", () => ({
-  __esModule: true,
-  default: () => mockData,
-}));
+test("Cards loads", () => {
+  const wrapper = shallow(<Cards />);
 
-describe("Card wont fail without component", () => {
-  const component = mount(<Cards />);
-  test("Cards component renders without crashing", () => {
-    const children = component.find("Wrapper");
-
-    expect(children).toHaveLength(1);
-  });
+  // console.log(wrapper.debug());
+  expect(wrapper.find(Loading).prop("loading")).toBe(true);
 });

@@ -1,11 +1,16 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
-import { render, screen } from "@testing-library/react";
-
 import CloseButton from "./CloseButton";
-import userEvent from "@testing-library/user-event";
-import SingleCard from "../SingleCard";
+import { mount } from "enzyme";
 
-test("CloseButton component renders without crashing", () => {
-  shallow(<CloseButton />);
+test("SVG should be defined", () => {
+  const wrapper = mount(<CloseButton />);
+  expect(wrapper.find("svg")).toBeDefined();
+});
+
+test("CloseButton accepts click", () => {
+  const handleClick = jest.fn();
+  const wrapper = mount(<CloseButton onClick={handleClick} />);
+
+  wrapper.props().onClick();
+  // console.log(wrapper.debug());
+  expect(handleClick.mock.calls.length).toEqual(1);
 });

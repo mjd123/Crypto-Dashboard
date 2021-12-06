@@ -5,6 +5,9 @@
 import "@testing-library/jest-dom";
 import { configure } from "enzyme";
 import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import React from "react";
+React.useLayoutEffect = React.useEffect;
+
 configure({ adapter: new Adapter() });
 global.matchMedia =
   global.matchMedia ||
