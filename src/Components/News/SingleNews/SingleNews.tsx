@@ -1,6 +1,5 @@
 import { Card } from "antd";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { useState } from "react";
 import { Text } from "../styles";
 
@@ -22,21 +21,9 @@ const variants = {
 };
 
 const SingleNews = ({ news, id }: SingleNewsProps) => {
-  //const [newsItems, setNewsItems] = useState<any>([]);
   const [currentNewsItem, setCurrentNewsItem] = useState(0);
   const [fadeComponent, setFadeComponent] = useState(false);
-
-  const [fetchTrigger, setFetchTrigger] = useState<boolean>();
-
-  let newsItems: any = news;
-
-  useEffect(() => {
-    if (id === 0 && currentNewsItem === newsItems.length - 1) {
-      setFetchTrigger(true);
-    } else {
-      setFetchTrigger(false);
-    }
-  }, [news]);
+  let newsItems: Record<string, string> | any = news;
 
   return (
     <>

@@ -60,7 +60,7 @@ const IndividualCard = memo(
       history &&
         history[timeframe]?.map((x: number[], i: number) => {
           //setPriceData("");
-          setPriceData((priceData): any => [
+          return setPriceData((priceData): any => [
             ...priceData,
             {
               priceDate: x[0], //new Date(x[0]).toISOString().slice(5, 10),
@@ -78,6 +78,7 @@ const IndividualCard = memo(
       }
     }, [expanded]);
 
+    // recieves data from DateButton to refresh props sent to Chart
     const timeframeChange = (data: string) => {
       setPriceData([]);
       setTimeframe(data);

@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import { CloseOutlined } from "@ant-design/icons";
-import { CardContext } from "../../../../Contexts/ToggleCardExpandContext";
+import { CardContext } from "../../../../contexts/ToggleCardExpandContext";
 
 interface CloseButtonProps {
   onClick?: () => void;
 }
 
 const CloseButton: React.FC<CloseButtonProps> = (props: CloseButtonProps) => {
-  const { cardStatus, toggleStatus } = useContext(CardContext);
+  const { toggleStatus } = useContext(CardContext);
   return (
     <CloseOutlined
       data-testid="close-button"

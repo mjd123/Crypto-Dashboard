@@ -12,13 +12,12 @@ interface NewsProps {
 const News = ({ data }: NewsProps) => {
   const [loading, setLoading] = useState(true);
 
+  // if loading spinner should show
   useEffect(() => {
     if (data) {
       setLoading(false);
-      console.log("true");
     } else {
       setLoading(true);
-      console.log("false");
     }
   }, [data]);
 

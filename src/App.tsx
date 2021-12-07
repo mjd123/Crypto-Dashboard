@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import GlobalCSS from "./styles/Global";
 import "./App.css";
-import Time from "./Components/Time/Time";
+import Time from "./components/Time/Time";
 import { App as Main } from "./styles/App";
-import Cards from "./Components/Cards/Cards";
-import Author from "./Components/Author/Author";
+import Cards from "./components/Cards/Cards";
+import Author from "./components/Author/Author";
 import useFetchData from "./hooks/useFetchData";
-import News from "./Components/News/News";
-import ToggleCardExpandContext, {
-  CardContext,
-} from "./Contexts/ToggleCardExpandContext";
+import News from "./components/News/News";
+import ToggleCardExpandContext from "./contexts/ToggleCardExpandContext";
 import { motion, useAnimation, useViewportScroll } from "framer-motion";
 import useWindowDimensions from "./hooks/useWindowDimentions";
 import useInterval from "./hooks/useInterval";
@@ -20,7 +18,7 @@ const App = () => {
   const [img, setImg] = useState("");
   const [news, setNews] = useState<{}>("");
   const { width } = useWindowDimensions();
-  const [loading, setLoading] = useState<boolean | string>();
+  const [loading, setLoading] = useState<boolean | string>(false);
   let { backgroundData, newsData } = useFetchData(loading);
   const [priceDataStore, setpriceDataStore] = useState<Record<string, {}>>();
   const [coinDataStore, setCoinDataStore] =
@@ -55,11 +53,16 @@ const App = () => {
     // check there is data
     if (backgroundData && Object.keys(backgroundData).length) {
       setImg(backgroundData.image);
+    } else {
+      // check every few seconds for data if no data avalible
+      const intervalId = setInterval(() => {
+        setLoading((loading) => !loading);
+      }, 3000);
+      return () => clearInterval(intervalId);
     }
     // pass to news component and let it break data down
     if (newsData && Object.keys(newsData).length) {
       setNews(newsData);
-      console.log(newsData);
     }
   }, [backgroundData, newsData]);
 
@@ -143,7 +146,7 @@ const App = () => {
                 : { gridRow: "2 / 4", gridColumn: "1", opacity: 1 }
             }
           >
-            <News data={newsData} />
+            <News data={news} />
           </motion.div>
 
           <motion.div

@@ -14,13 +14,14 @@ const component = mount(
     range={{ low: mockData.range.low, high: mockData.range.high }}
   />
 );
-describe("passing props", () => {
+
   test("PriceStats accepts props", () => {
     expect(component.props()).toEqual(mockData);
   });
+  
   test("PriceStats returns correct props", () => {
     for (let i = 0; i < 7; i++) {
       expect(typeof component.find("span").at(i).text()).toBe("string");
     }
   });
-});
+

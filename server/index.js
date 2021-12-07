@@ -186,40 +186,15 @@ const updateData = async () => {
   console.log("func running");
   apiData.priceData = {};
   apiData.coinOverview = [];
-  // apiData.newsData.cryptoHeadlines = {};
-  // apiData.newsData.topHeadlines = {};
-  // apiData.newsData.shortHeadlines = {};
   apiData.fetched = false;
-  // console.log(apiData, "check object empty");
+
   try {
-    // fetch background image once
-    // if (!apiData.backgroundData.fetched) {
-    //   getBackgroundImage();
-    //   apiData.backgroundData.fetched = true;
-    // }
-    // getNews();
     await getAllCoinData();
 
-    //if (apiData.coinOverview && apiData.priceData) {
     apiData.fetched = true;
-    //}
-
-    // .then(([cryptoHeadlines, topHeadlines, shortHeadlines]) => {
-    //   apiData.newsData.cryptoHeadlines = cryptoHeadlines.articles;
-    //   apiData.newsData.topHeadlines = topHeadlines.articles;
-    //   apiData.newsData.shortHeadlines = shortHeadlines.results;
-    //   apiData.newsData.fetched = true;
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
-
-    console.log(apiData.fetched, "apiData.fetched ");
   } catch (error) {
     console.log(error, "final error");
     apiData.fetched = false;
-  } finally {
-    console.log(apiData.backgroundData, "overview");
   }
 };
 

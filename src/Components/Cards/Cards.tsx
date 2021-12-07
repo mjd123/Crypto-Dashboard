@@ -3,9 +3,7 @@ import SingleCard from "./SingleCard/SingleCard";
 import { Wrapper } from "./styles";
 import { Row } from "antd";
 import "antd/dist/antd.css";
-import ToggleCardExpandContext, {
-  CardContext,
-} from "../../Contexts/ToggleCardExpandContext";
+import { CardContext } from "../../contexts/ToggleCardExpandContext";
 import { AnimatePresence, motion } from "framer-motion";
 import Loading from "../../helpers/Loading";
 
@@ -54,9 +52,9 @@ const Cards = ({ data, history }: CardsProps) => {
         <Loading loading={loading} />
         {history &&
           data &&
-          data.map((coin: any, i: number) => {
+          data.map((coin: Record<string, any>, i: number) => {
             return (
-              <>
+              <div key={i}>
                 <AnimatePresence onExitComplete={() => setFadeComponent(true)}>
                   {cardStatus === null && !fadeComponent && (
                     <motion.div
@@ -79,7 +77,6 @@ const Cards = ({ data, history }: CardsProps) => {
                         className="single-card-wrapper"
                       >
                         <SingleCard
-                          key={i}
                           keyId={i}
                           history={history[coin.id]}
                           coinImage={coin.image}
@@ -113,7 +110,6 @@ const Cards = ({ data, history }: CardsProps) => {
                         className="single-card-wrapper"
                       >
                         <SingleCard
-                          key={i}
                           expanded={rowClicked === i ? true : false}
                           keyId={i}
                           history={history[coin.id]}
@@ -132,7 +128,7 @@ const Cards = ({ data, history }: CardsProps) => {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </>
+              </div>
             );
           })}
       </Wrapper>

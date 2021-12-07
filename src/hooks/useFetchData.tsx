@@ -18,7 +18,7 @@ const useFetchData = (params: string | boolean | undefined) => {
       }
     };
     fetchBackgroundData();
-  }, []);
+  }, [params]);
 
   useEffect(() => {
     const fetchNewsData = async () => {
@@ -27,8 +27,7 @@ const useFetchData = (params: string | boolean | undefined) => {
           type: "news",
         },
       });
-      setNewsData(response.data.newsData);
-      console.log(newsData, " news function");
+      await setNewsData(response.data.newsData);
     };
     fetchNewsData();
   }, [params]);
