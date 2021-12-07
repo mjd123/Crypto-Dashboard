@@ -22,7 +22,6 @@ export const Wrapper = styled(NewsWrapper)`
   padding: 10px;
   justify-self: start;
   width: fit-content;
-  /* height: fit-content; */
   ${device.md`
     grid-column: 1 / span 2;
     margin:auto;
@@ -32,7 +31,6 @@ export const Wrapper = styled(NewsWrapper)`
 `;
 
 export const StyledRow = styled(Row)`
-  //width: 100%;
   height: auto;
   margin: 0;
 `;

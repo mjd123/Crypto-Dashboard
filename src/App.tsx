@@ -142,7 +142,7 @@ const App = () => {
             animate={newsControls}
             style={
               width <= 768
-                ? { ...motionStyles, opacity: 1 }
+                ? { ...motionStyles, opacity: 0 }
                 : { gridRow: "2 / 4", gridColumn: "1", opacity: 1 }
             }
           >
