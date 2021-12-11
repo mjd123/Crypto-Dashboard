@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useMemo } from "react";
 import { Line } from "@ant-design/charts";
 import moment from "moment";
 
@@ -8,12 +8,13 @@ interface ChartProps {
   expanded?: boolean | undefined;
   timeframe: string;
 }
-
+let chart = 0;
 const Chart = memo(
   ({ history, priceChange, expanded, timeframe }: ChartProps) => {
+    console.log(`chart= ${chart++}`);
     let data = history;
 
-    const [lowestPrice, setLowestPrice] = useState<number>(0);
+    const [lowestPrice, setLowestPrice] = useState(0);
     const [expandChart, setExpandChart] = useState<boolean | undefined>(false);
 
     useEffect(() => {
@@ -28,30 +29,33 @@ const Chart = memo(
       setExpandChart(expanded);
     }, [expanded]);
 
-    const formatDate = (v: string | number) => {
-      switch (timeframe) {
-        case "sevenDays":
-          return moment(v).format("Do");
+    const formatDate = useMemo(
+      () => (v: string) => {
+        switch (timeframe) {
+          case "sevenDays":
+            return moment(v).format("Do");
 
-        case "oneMonth":
-          return moment(v).format("Do");
+          case "oneMonth":
+            return moment(v).format("Do");
 
-        case "oneYearToDate":
-          return moment(v).format("MMM");
+          case "oneYearToDate":
+            return moment(v).format("MMM");
 
-        case "oneYear":
-          return moment(v).format("MMM");
+          case "oneYear":
+            return moment(v).format("MMM");
 
-        case "fiveYears":
-          return new Date(v).getFullYear();
+          case "fiveYears":
+            return new Date(v).getFullYear();
 
-        case "All":
-          return new Date(v).getFullYear();
+          case "All":
+            return new Date(v).getFullYear();
 
-        default:
-          return moment(v).format("hh a");
-      }
-    };
+          default:
+            return moment(v).format("hh a");
+        }
+      },
+      [timeframe]
+    );
 
     const color = () => {
       if (expandChart) {
@@ -64,30 +68,35 @@ const Chart = memo(
       }
     };
 
-    const labelDate = (items: any) => {
-      switch (timeframe) {
-        case "sevenDays":
-          return `Day: ${moment(items[0]?.data?.priceDate).format("Do")}`;
-        case "oneMonth":
-          return `Day: ${moment(items[0]?.data?.priceDate).format("Do MMM")}`;
-        case "oneYearToDate":
-          return `Month: ${moment(items[0]?.data?.priceDate).format("Do MMM")}`;
-        case "oneYear":
-          return `Month: ${moment(items[0]?.data?.priceDate).format(
-            "Do MMM y"
-          )}`;
-        case "fiveYears":
-          return `Year: ${moment(items[0]?.data?.priceDate).format(
-            "Do MMM y"
-          )}`;
-        case "All":
-          return `Year: ${moment(items[0]?.data?.priceDate).format(
-            "Do MMM y"
-          )}`;
-        default:
-          return `Time: ${moment(items[0]?.data?.priceDate).format("HH:MM")}`;
-      }
-    };
+    const labelDate = useMemo(
+      () => (items: any) => {
+        switch (timeframe) {
+          case "sevenDays":
+            return `Day: ${moment(items[0]?.data?.priceDate).format("Do")}`;
+          case "oneMonth":
+            return `Day: ${moment(items[0]?.data?.priceDate).format("Do MMM")}`;
+          case "oneYearToDate":
+            return `Month: ${moment(items[0]?.data?.priceDate).format(
+              "Do MMM"
+            )}`;
+          case "oneYear":
+            return `Month: ${moment(items[0]?.data?.priceDate).format(
+              "Do MMM y"
+            )}`;
+          case "fiveYears":
+            return `Year: ${moment(items[0]?.data?.priceDate).format(
+              "Do MMM y"
+            )}`;
+          case "All":
+            return `Year: ${moment(items[0]?.data?.priceDate).format(
+              "Do MMM y"
+            )}`;
+          default:
+            return `Time: ${moment(items[0]?.data?.priceDate).format("HH:MM")}`;
+        }
+      },
+      [timeframe]
+    );
 
     const config: any = {
       loading: false,

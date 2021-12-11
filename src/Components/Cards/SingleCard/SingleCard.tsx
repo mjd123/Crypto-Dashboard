@@ -7,7 +7,7 @@ import CloseButton from "./CloseButton/CloseButton";
 import DateButtons from "./DateButtons/DateButtons";
 import PriceStats from "./PriceStats/PriceStats";
 
-export interface IndividualCardProps {
+export interface SingleCardProps {
   coinImage?: string | undefined;
   text: string;
   symbol: string;
@@ -30,7 +30,7 @@ export const timeframeKeys: string[] = [
   "All",
 ];
 
-const IndividualCard = memo(
+const SingleCard = memo(
   ({
     coinImage,
     text,
@@ -42,7 +42,7 @@ const IndividualCard = memo(
     totalVolume,
     dayRange,
     keyId,
-  }: IndividualCardProps) => {
+  }: SingleCardProps) => {
     const [priceData, setPriceData] = useState<
       [{ price: number; priceDate: string | undefined }] | []
     >([]);
@@ -219,4 +219,4 @@ const IndividualCard = memo(
   }
 );
 
-export default IndividualCard;
+export default SingleCard;

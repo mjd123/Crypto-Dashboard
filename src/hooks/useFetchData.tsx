@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+export interface INews {
+  cryptoHeadlines: [];
+  shortHeadlines: [];
+  topHeadlines: [];
+  fetched?: boolean;
+}
+
+export interface IBackground {
+  author?: string;
+  fetched?: boolean;
+  image?: string;
+}
+
 const useFetchData = (params: string | boolean | undefined) => {
-  const [backgroundData, setBackgroundData] =
-    useState<Record<string, string>>();
-  const [newsData, setNewsData] = useState<{}>();
+  const [backgroundData, setBackgroundData] = useState<IBackground>();
+  const [newsData, setNewsData] = useState<INews>();
 
   useEffect(() => {
     const fetchBackgroundData = async () => {
@@ -15,6 +27,7 @@ const useFetchData = (params: string | boolean | undefined) => {
       });
       if (response.data.backgroundData.fetched) {
         setBackgroundData(response.data.backgroundData);
+        console.log(backgroundData);
       }
     };
     fetchBackgroundData();

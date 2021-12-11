@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { device } from "./Breakpoints";
 
 interface Props {
-  backgroundImage: string;
+  backgroundImage: string | undefined;
 }
 
 export const App = styled.main<Props>`

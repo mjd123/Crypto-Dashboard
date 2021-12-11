@@ -5,7 +5,7 @@ import Time from "./components/Time/Time";
 import { App as Main } from "./styles/App";
 import Cards from "./components/Cards/Cards";
 import Author from "./components/Author/Author";
-import useFetchData from "./hooks/useFetchData";
+import useFetchData, { INews } from "./hooks/useFetchData";
 import News from "./components/News/News";
 import ToggleCardExpandContext from "./contexts/ToggleCardExpandContext";
 import { motion, useAnimation, useViewportScroll } from "framer-motion";
@@ -15,8 +15,8 @@ import axios from "axios";
 import Loading from "./helpers/Loading";
 
 const App = () => {
-  const [img, setImg] = useState("");
-  const [news, setNews] = useState<{}>("");
+  const [img, setImg] = useState<string | undefined>("");
+  const [news, setNews] = useState<INews>();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState<boolean | string>(false);
   let { backgroundData, newsData } = useFetchData(loading);
@@ -34,7 +34,7 @@ const App = () => {
     const response = await axios.get(`/api`);
 
     if (isMounted) {
-      if (response.data.fetched === true) {
+      if (response.data.fetched) {
         // update only if data is new
         if (
           JSON.stringify(coinDataStore) !==

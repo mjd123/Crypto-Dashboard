@@ -5,11 +5,13 @@ import SingleNews from "./SingleNews/SingleNews";
 import { useState, useEffect } from "react";
 import Loading from "../../helpers/Loading";
 
-interface NewsProps {
-  data?: Record<string, []>;
+export interface NewsProps {
+  data?: { cryptoHeadlines: []; shortHeadlines: []; topHeadlines: [] };
 }
 
 const News = ({ data }: NewsProps) => {
+  console.log(data);
+
   const [loading, setLoading] = useState(true);
 
   // if loading spinner should show

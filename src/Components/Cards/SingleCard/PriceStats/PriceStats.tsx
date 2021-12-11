@@ -33,8 +33,8 @@ const PriceStats = ({
     let endOfYeasterday = moment().subtract(2, "days").endOf("day");
     let beginningOfToday = moment().startOf("day");
 
-    let todaysOpenPrice: number = 0;
-    let yesterdaysClosingPrice: number = 0;
+    let todaysOpenPrice = 0;
+    let yesterdaysClosingPrice = 0;
 
     yesterdayPriceHistory.forEach((date) => {
       let yesterdayDiff = moment(date[0]).diff(moment(endOfYeasterday), "days");

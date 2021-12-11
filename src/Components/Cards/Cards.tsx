@@ -15,16 +15,14 @@ interface CardsProps {
 const Cards = ({ data, history }: CardsProps) => {
   const { cardStatus, toggleStatus } = useContext(CardContext);
   const [rowClicked, setRowClicked] = useState<number | null>(null);
-  const [fadeComponent, setFadeComponent] = useState<boolean>(false);
+  const [fadeComponent, setFadeComponent] = useState(false);
   const ref = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!data) {
-      //toggleLoading(true);
       setLoading(true);
     } else {
-      // toggleLoading(false);
       setLoading(false);
     }
   }, [data]);

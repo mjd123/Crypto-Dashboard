@@ -43,7 +43,6 @@ app.get("/api", (req, res) => {
   // run functions depending on req
   switch (req.query.type) {
     case "background":
-      console.log("background func called");
       return getBackgroundImage();
 
     case "news":
