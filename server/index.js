@@ -198,7 +198,7 @@ const updateData = async () => {
 };
 
 // run on interval
-setInterval(updateData, 180000);
+setInterval(updateData, 30000);
 
 // run once
 updateData();

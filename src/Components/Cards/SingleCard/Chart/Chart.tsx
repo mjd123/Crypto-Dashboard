@@ -7,10 +7,11 @@ interface ChartProps {
   priceChange: number;
   expanded?: boolean | undefined;
   timeframe: string;
+  loading: boolean;
 }
 let chart = 0;
 const Chart = memo(
-  ({ history, priceChange, expanded, timeframe }: ChartProps) => {
+  ({ history, priceChange, expanded, timeframe, loading }: ChartProps) => {
     console.log(`chart= ${chart++}`);
     let data = history;
 
@@ -19,11 +20,12 @@ const Chart = memo(
 
     useEffect(() => {
       data = [{ price: 0, priceDate: "" }];
-    }, []);
+    }, [timeframe]);
 
     useEffect(() => {
+      // console.log(history, timeframe, "chart data");
       setLowestPrice(Math.min(...history.map((item: any) => item.price)));
-    }, [history]);
+    }, [history, timeframe]);
 
     useEffect(() => {
       setExpandChart(expanded);
@@ -99,7 +101,7 @@ const Chart = memo(
     );
 
     const config: any = {
-      loading: false,
+      loading: expanded ? loading : false,
       Animation: false,
       data,
       meta: {
@@ -166,7 +168,7 @@ const Chart = memo(
     return (
       <>
         {!expandChart && <Line {...config} />}
-        {data && expandChart && <Line {...config} />}
+        {expandChart && <Line {...config} />}
       </>
     );
   }

@@ -6,26 +6,32 @@ import "antd/dist/antd.css";
 import { CardContext } from "../../contexts/ToggleCardExpandContext";
 import { AnimatePresence, motion } from "framer-motion";
 import Loading from "../../helpers/Loading";
+import { gql, useQuery } from "@apollo/client";
 
-interface CardsProps {
-  data?: Record<string, string | number>[] | undefined;
-  history?: Record<string, {}> | undefined;
-}
+const COIN_DATA = gql`
+  query {
+    coinData {
+      id
+      symbol
+      name
+      image
+      current_price
+      high_24h
+      low_24h
+      price_change_24h
+      price_change_percentage_24h
+      ath
+      total_volume
+    }
+  }
+`;
 
-const Cards = ({ data, history }: CardsProps) => {
+const Cards = () => {
   const { cardStatus, toggleStatus } = useContext(CardContext);
   const [rowClicked, setRowClicked] = useState<number | null>(null);
   const [fadeComponent, setFadeComponent] = useState(false);
   const ref = useRef<HTMLInputElement | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!data) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [data]);
+  const { loading, error, data } = useQuery(COIN_DATA, { pollInterval: 9000 });
 
   const expandRow = (
     e: MouseEvent | TouchEvent | PointerEvent,
@@ -48,9 +54,10 @@ const Cards = ({ data, history }: CardsProps) => {
     >
       <Wrapper className="cards-wrapper">
         <Loading loading={loading} />
-        {history &&
+        {!loading &&
           data &&
-          data.map((coin: Record<string, any>, i: number) => {
+          error === undefined &&
+          data.coinData.map((coin: Record<string, any>, i: number) => {
             return (
               <div key={i}>
                 <AnimatePresence onExitComplete={() => setFadeComponent(true)}>
@@ -75,8 +82,8 @@ const Cards = ({ data, history }: CardsProps) => {
                         className="single-card-wrapper"
                       >
                         <SingleCard
+                          id={coin.id}
                           keyId={i}
-                          history={history[coin.id]}
                           coinImage={coin.image}
                           price={coin.current_price}
                           priceChange={coin.price_change_percentage_24h}
@@ -108,9 +115,9 @@ const Cards = ({ data, history }: CardsProps) => {
                         className="single-card-wrapper"
                       >
                         <SingleCard
+                          id={coin.id}
                           expanded={rowClicked === i ? true : false}
                           keyId={i}
-                          history={history[coin.id]}
                           coinImage={coin.image}
                           price={coin.current_price}
                           priceChange={coin.price_change_percentage_24h}
@@ -118,8 +125,8 @@ const Cards = ({ data, history }: CardsProps) => {
                           symbol={coin.symbol}
                           totalVolume={coin.total_volume}
                           dayRange={{
-                            low: coin.low_24h | 0,
-                            high: coin.high_24h | 0,
+                            low: coin.low_24h || 0,
+                            high: coin.high_24h || 0,
                           }}
                         />
                       </Row>

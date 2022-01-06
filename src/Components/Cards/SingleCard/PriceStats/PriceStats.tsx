@@ -1,20 +1,29 @@
+import { gql, useQuery } from "@apollo/client";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { CardTextWrapper, Text } from "../../styles";
 
 interface PriceStatsProps {
-  yesterdayPriceHistory: [];
   volume: number;
   range: { low: number | undefined; high: number | undefined };
+  coinId: string;
 }
 
-const PriceStats = ({
-  yesterdayPriceHistory,
-  volume,
-  range,
-}: PriceStatsProps) => {
+const PRICE_DATA = gql`
+  query ($coin: String, $timeframe: String) {
+    coinPriceHistory(coin: $coin, timeframe: $timeframe) {
+      priceDate
+      price
+    }
+  }
+`;
+
+const PriceStats = ({ volume, range, coinId }: PriceStatsProps) => {
   const [openPrice, setOpenPrice] = useState<number | null>(null);
   const [closePrice, setclosePrice] = useState<number | null>(null);
+  const { loading, error, data } = useQuery(PRICE_DATA, {
+    variables: { coin: coinId, timeframe: "yesterday" },
+  });
 
   const convertToInternationalCurrencySystem = (labelValue: number) => {
     // Nine Zeroes for Billions
@@ -36,34 +45,44 @@ const PriceStats = ({
     let todaysOpenPrice = 0;
     let yesterdaysClosingPrice = 0;
 
-    yesterdayPriceHistory.forEach((date) => {
-      let yesterdayDiff = moment(date[0]).diff(moment(endOfYeasterday), "days");
-      let todayDifference = moment(date[0]).diff(
-        moment(beginningOfToday),
-        "days"
-      );
-      if (yesterdayDiff >= 0) {
-        if (yesterdaysClosingPrice) {
-          if (
-            moment(date[0]).diff(moment(yesterdaysClosingPrice), "days") < 0
-          ) {
-            setclosePrice(date[1]);
+    data?.coinPriceHistory?.forEach(
+      (date: { priceDate: number; price: number }) => {
+        let yesterdayDiff = moment(date.priceDate).diff(
+          moment(endOfYeasterday),
+          "days"
+        );
+        let todayDifference = moment(date.priceDate).diff(
+          moment(beginningOfToday),
+          "days"
+        );
+        if (yesterdayDiff >= 0) {
+          if (yesterdaysClosingPrice) {
+            if (
+              moment(date.priceDate).diff(
+                moment(yesterdaysClosingPrice),
+                "days"
+              ) < 0
+            ) {
+              setclosePrice(date.price);
+            }
+          } else {
+            setclosePrice(date.price);
           }
-        } else {
-          setclosePrice(date[1]);
+        }
+        if (todayDifference >= 0) {
+          if (todaysOpenPrice) {
+            if (
+              moment(date.priceDate).diff(moment(todaysOpenPrice), "days") < 0
+            ) {
+              setOpenPrice(date.price);
+            }
+          } else {
+            setOpenPrice(date.price);
+          }
         }
       }
-      if (todayDifference >= 0) {
-        if (todaysOpenPrice) {
-          if (moment(date[0]).diff(moment(todaysOpenPrice), "days") < 0) {
-            setOpenPrice(date[1]);
-          }
-        } else {
-          setOpenPrice(date[1]);
-        }
-      }
-    });
-  }, [yesterdayPriceHistory]);
+    );
+  }, [data]);
 
   return (
     <>
@@ -74,34 +93,34 @@ const PriceStats = ({
         marginBottom="1.5em"
       >
         <CardTextWrapper display="flex" flexDirection="column">
-          <Text color="black" fontSize="0.9em">
+          <Text color="black" fontSize="0.7em">
             ${closePrice?.toFixed(2)}
           </Text>
-          <Text color="black" fontSize="0.9em">
+          <Text color="black" fontSize="0.7em">
             prev
           </Text>
         </CardTextWrapper>
         <CardTextWrapper display="flex" flexDirection="column">
-          <Text color="black" fontSize="0.9em">
+          <Text color="black" fontSize="0.7em">
             ${openPrice?.toFixed(2)}
           </Text>
-          <Text color="black" fontSize="0.9em">
+          <Text color="black" fontSize="0.7em">
             open
           </Text>
         </CardTextWrapper>
         <CardTextWrapper display="flex" flexDirection="column">
-          <Text color="black" fontSize="0.9em">
+          <Text color="black" fontSize="0.7em">
             {convertToInternationalCurrencySystem(volume)}
           </Text>
-          <Text color="black" fontSize="0.9em">
+          <Text color="black" fontSize="0.7em">
             volume
           </Text>
         </CardTextWrapper>
         <CardTextWrapper display="flex" flexDirection="column">
-          <Text color="black" fontSize="0.9em">
-            ${range.low} - ${range.high}
+          <Text color="black" fontSize="0.7em">
+            ${range.low?.toFixed(2)} - ${range.high?.toFixed(2)}
           </Text>
-          <Text color="black" fontSize="0.9em">
+          <Text color="black" fontSize="0.7em">
             days's range
           </Text>
         </CardTextWrapper>

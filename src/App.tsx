@@ -1,70 +1,39 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GlobalCSS from "./styles/Global";
 import "./App.css";
 import Time from "./components/Time/Time";
 import { App as Main } from "./styles/App";
 import Cards from "./components/Cards/Cards";
 import Author from "./components/Author/Author";
-import useFetchData, { INews } from "./hooks/useFetchData";
 import News from "./components/News/News";
 import ToggleCardExpandContext from "./contexts/ToggleCardExpandContext";
 import { motion, useAnimation, useViewportScroll } from "framer-motion";
 import useWindowDimensions from "./hooks/useWindowDimentions";
-import useInterval from "./hooks/useInterval";
-import axios from "axios";
 import Loading from "./helpers/Loading";
+import { useQuery, gql } from "@apollo/client";
+
+const BACKGROUND_DATA = gql`
+  query Query {
+    backgroundImage {
+      urls {
+        full
+      }
+      user {
+        name
+      }
+    }
+  }
+`;
 
 const App = () => {
-  const [img, setImg] = useState<string | undefined>("");
-  const [news, setNews] = useState<INews>();
   const { width } = useWindowDimensions();
-  const [loading, setLoading] = useState<boolean | string>(false);
-  let { backgroundData, newsData } = useFetchData(loading);
-  const [priceDataStore, setpriceDataStore] = useState<Record<string, {}>>();
-  const [coinDataStore, setCoinDataStore] =
-    useState<Record<string, string | number>[]>();
   const newsControls = useAnimation();
   const cardControls = useAnimation();
   const scrollHeight = window.innerHeight;
   const { scrollY } = useViewportScroll();
   const [fadeComponent, setFadeComponent] = useState(false);
 
-  const getCoins = useCallback(async () => {
-    let isMounted = true;
-    const response = await axios.get(`/api`);
-
-    if (isMounted) {
-      if (response.data.fetched) {
-        // update only if data is new
-        if (
-          JSON.stringify(coinDataStore) !==
-          JSON.stringify(response.data.coinOverview)
-        ) {
-          setCoinDataStore(response.data.coinOverview);
-          setpriceDataStore(response.data.priceData);
-        }
-      }
-    }
-  }, [coinDataStore]);
-
-  useInterval(getCoins, 6000);
-
-  useEffect(() => {
-    // check there is data
-    if (backgroundData && Object.keys(backgroundData).length) {
-      setImg(backgroundData.image);
-    } else {
-      // check every few seconds for data if no data avalible
-      const intervalId = setInterval(() => {
-        setLoading((loading) => !loading);
-      }, 3000);
-      return () => clearInterval(intervalId);
-    }
-    // pass to news component and let it break data down
-    if (newsData && Object.keys(newsData).length) {
-      setNews(newsData);
-    }
-  }, [backgroundData, newsData]);
+  const { loading, error, data } = useQuery(BACKGROUND_DATA);
 
   useEffect(() => {
     // check screensize
@@ -133,8 +102,12 @@ const App = () => {
   return (
     <>
       <GlobalCSS />
-      <Loading loading={img ? false : true} />
-      <Main backgroundImage={img}>
+      <Loading loading={loading} />
+      <Main
+        backgroundImage={
+          !loading && error === undefined && data.backgroundImage.urls.full
+        }
+      >
         <Time />
         <ToggleCardExpandContext>
           <motion.div
@@ -146,7 +119,7 @@ const App = () => {
                 : { gridRow: "2 / 4", gridColumn: "1", opacity: 1 }
             }
           >
-            <News data={news} />
+            <News />
           </motion.div>
 
           <motion.div
@@ -163,10 +136,10 @@ const App = () => {
                   }
             }
           >
-            <Cards data={coinDataStore} history={priceDataStore} />
+            <Cards />
           </motion.div>
         </ToggleCardExpandContext>
-        <Author name={backgroundData && backgroundData.author} />
+        <Author name={!loading && data.backgroundImage.user.name} />
       </Main>
     </>
   );

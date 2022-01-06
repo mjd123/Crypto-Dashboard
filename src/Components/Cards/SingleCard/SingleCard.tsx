@@ -6,6 +6,8 @@ import { memo, useEffect, useState } from "react";
 import CloseButton from "./CloseButton/CloseButton";
 import DateButtons from "./DateButtons/DateButtons";
 import PriceStats from "./PriceStats/PriceStats";
+import { gql, useQuery } from "@apollo/client";
+import Loading from "../../../helpers/Loading";
 
 export interface SingleCardProps {
   coinImage?: string | undefined;
@@ -13,12 +15,21 @@ export interface SingleCardProps {
   symbol: string;
   price: string | number;
   priceChange: number;
-  history?: any;
   expanded?: boolean | undefined;
   totalVolume?: number;
   dayRange?: { low: number; high: number };
   keyId: number;
+  id: string;
 }
+
+const PRICE_DATA = gql`
+  query ($coin: String, $timeframe: String) {
+    coinPriceHistory(coin: $coin, timeframe: $timeframe) {
+      priceDate
+      price
+    }
+  }
+`;
 
 export const timeframeKeys: string[] = [
   "yesterday",
@@ -37,11 +48,11 @@ const SingleCard = memo(
     symbol,
     price,
     priceChange,
-    history,
     expanded,
     totalVolume,
     dayRange,
     keyId,
+    id,
   }: SingleCardProps) => {
     const [priceData, setPriceData] = useState<
       [{ price: number; priceDate: string | undefined }] | []
@@ -49,26 +60,16 @@ const SingleCard = memo(
     const [expandCard, setExpandCard] = useState<boolean | undefined>(false);
     const [timeframe, setTimeframe] = useState("yesterday");
     const [defaultButtonHighlight, setDefaultButtonHighlight] = useState(true);
+    const { loading, error, data } = useQuery(PRICE_DATA, {
+      variables: { coin: id, timeframe: timeframe },
+      pollInterval: 7000,
+    });
 
     useEffect(() => {
-      //reset price data on props change
-      setPriceData([]);
-    }, [history, timeframe]);
-
-    useEffect(() => {
-      // parsing props.history date and price into human readable version
-      history &&
-        history[timeframe]?.map((x: number[], i: number) => {
-          //setPriceData("");
-          return setPriceData((priceData): any => [
-            ...priceData,
-            {
-              priceDate: x[0], //new Date(x[0]).toISOString().slice(5, 10),
-              price: x[1], // need to keep decimal places
-            },
-          ]);
-        });
-    }, [history, timeframe]);
+      if (data && !loading) {
+        setPriceData(data.coinPriceHistory);
+      }
+    }, [loading, data, error]);
 
     useEffect(() => {
       if (expanded) {
@@ -80,7 +81,6 @@ const SingleCard = memo(
 
     // recieves data from DateButton to refresh props sent to Chart
     const timeframeChange = (data: string) => {
-      setPriceData([]);
       setTimeframe(data);
       setDefaultButtonHighlight(false);
     };
@@ -116,6 +116,8 @@ const SingleCard = memo(
 
     return (
       <>
+        {!expandCard && <Loading loading={loading} />}
+
         <Card
           data-testid="card"
           className={expandCard ? "expanded" : ""}
@@ -155,14 +157,13 @@ const SingleCard = memo(
             marginBottom={expandCard ? "1.5em" : "0"}
             height={"auto"}
           >
-            {history && (
-              <Chart
-                expanded={expandCard}
-                history={priceData}
-                priceChange={priceChange}
-                timeframe={timeframe}
-              />
-            )}
+            <Chart
+              expanded={expandCard}
+              history={priceData}
+              priceChange={priceChange}
+              timeframe={timeframe}
+              loading={loading}
+            />
           </CardTextWrapper>
 
           <CardTextWrapper
@@ -178,7 +179,8 @@ const SingleCard = memo(
               {priceChange.toFixed(2)}%
             </Text>
           </CardTextWrapper>
-          {expandCard && totalVolume && history && (
+
+          {expandCard && totalVolume && priceData && !loading && (
             <>
               <CardTextWrapper
                 className="date-button-wrapper"
@@ -203,8 +205,9 @@ const SingleCard = memo(
                   );
                 })}
               </CardTextWrapper>
+
               <PriceStats
-                yesterdayPriceHistory={history.yesterday}
+                coinId={id}
                 volume={totalVolume}
                 range={{
                   low: dayRange?.low,

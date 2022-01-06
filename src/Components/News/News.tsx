@@ -2,26 +2,59 @@ import { Col } from "antd";
 import { StyledRow, Wrapper } from "./styles";
 import "antd/dist/antd.css";
 import SingleNews from "./SingleNews/SingleNews";
-import { useState, useEffect } from "react";
 import Loading from "../../helpers/Loading";
+import { gql, useQuery } from "@apollo/client";
 
-export interface NewsProps {
-  data?: { cryptoHeadlines: []; shortHeadlines: []; topHeadlines: [] };
-}
-
-const News = ({ data }: NewsProps) => {
-  console.log(data);
-
-  const [loading, setLoading] = useState(true);
-
-  // if loading spinner should show
-  useEffect(() => {
-    if (data) {
-      setLoading(false);
-    } else {
-      setLoading(true);
+const SHORT_NEWS = gql`
+  query ShortCryptoNews {
+    shortCryptoNews {
+      title
+      url
+      slug
     }
-  }, [data]);
+  }
+`;
+
+const MAIN_CRYPTO_NEWS = gql`
+  query {
+    mainCryptoNews {
+      author
+      title
+      url
+      urlToImage
+      content
+    }
+  }
+`;
+
+const GENERAL_NEWS = gql`
+  query {
+    generalNews {
+      author
+      title
+      url
+      urlToImage
+      content
+    }
+  }
+`;
+
+const News = () => {
+  const {
+    loading: shortCryptoNewsLoading,
+    error: shortCryptoNewsError,
+    data: shortCryptoNewsData,
+  } = useQuery(SHORT_NEWS, { pollInterval: 120000 });
+  const {
+    loading: mainCryptoNewsLoading,
+    error: mainCryptoNewsError,
+    data: mainCryptoNewsData,
+  } = useQuery(MAIN_CRYPTO_NEWS, { pollInterval: 120000 });
+  const {
+    loading: generalNewsLoading,
+    error: generalNewsError,
+    data: generalNewsData,
+  } = useQuery(GENERAL_NEWS, { pollInterval: 120000 });
 
   const loadingStyles = {
     minHeight: "50px",
@@ -31,29 +64,39 @@ const News = ({ data }: NewsProps) => {
 
   return (
     <Wrapper className="news-wrapper">
-      <Loading loading={loading} />
+      <Loading
+        loading={
+          shortCryptoNewsLoading && mainCryptoNewsLoading && generalNewsLoading
+        }
+      />
       <StyledRow justify="center" align="middle" gutter={[12, 12]}>
         <Col className="gutter-row" span={24} style={{ ...loadingStyles }}>
-          {data?.cryptoHeadlines && (
-            <SingleNews id={0} news={data?.cryptoHeadlines} />
+          {mainCryptoNewsError === undefined && !mainCryptoNewsLoading && (
+            <SingleNews id={0} news={mainCryptoNewsData?.mainCryptoNews} />
           )}
         </Col>
 
         <Col className="gutter-row" span={12} style={{ ...loadingStyles }}>
-          {data?.shortHeadlines?.length && (
+          {shortCryptoNewsError === undefined && !shortCryptoNewsLoading && (
             <SingleNews
-              news={data?.shortHeadlines?.filter((x, i) => i % 2 === 0)}
+              news={shortCryptoNewsData?.shortCryptoNews?.filter(
+                (x: any, i: number) => i % 2 === 0
+              )}
             />
           )}
         </Col>
         <Col className="gutter-row" span={12} style={{ ...loadingStyles }}>
-          {data?.shortHeadlines?.length && (
-            <SingleNews news={data?.shortHeadlines?.filter((x, i) => i % 2)} />
+          {shortCryptoNewsError === undefined && !shortCryptoNewsLoading && (
+            <SingleNews
+              news={shortCryptoNewsData?.shortCryptoNews?.filter(
+                (x: any, i: number) => i % 2
+              )}
+            />
           )}
         </Col>
         <Col className="gutter-row" span={24} style={{ ...loadingStyles }}>
-          {data?.topHeadlines?.length && (
-            <SingleNews news={data?.topHeadlines} />
+          {generalNewsError === undefined && !generalNewsLoading && (
+            <SingleNews news={generalNewsData?.generalNews} />
           )}
         </Col>
       </StyledRow>

@@ -39,6 +39,8 @@ const DateButtons = ({
       shape="round"
       size={"small"}
       onClick={(e) => {
+        console.log("click");
+
         if (!disabled) {
           timeframeData(timeframe);
           e.preventDefault();
